@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIERealTimeBlurView.h"
 
 static CGFloat const kCSNotificationViewHeight = 50.0f;
 static CGFloat const kCSNotificationViewSymbolViewSidelength = 44.0f;
@@ -17,7 +18,7 @@ typedef enum {
     CSNotificationViewStyleError,
 } CSNotificationViewStyle;
 
-@interface CSNotificationView : UIView
+@interface CSNotificationView : UIERealTimeBlurView
 
 #pragma mark + quick presentation
 

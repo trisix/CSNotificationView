@@ -1,0 +1,15 @@
+PODS:
+  - ios-realtimeblur (0.0.1)
+
+DEPENDENCIES:
+  - ios-realtimeblur (from `git@github.com:alexdrone/ios-realtimeblur.git`, branch `master`)
+
+EXTERNAL SOURCES:
+  ios-realtimeblur:
+    :branch: master
+    :git: git@github.com:alexdrone/ios-realtimeblur.git
+
+SPEC CHECKSUMS:
+  ios-realtimeblur: 3e60b57921c9e617fd9984e909f49ec1ec8f4a46
+
+COCOAPODS: 0.29.0

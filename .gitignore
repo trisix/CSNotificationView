@@ -1,19 +1,25 @@
-.DS_Store
-*.swp
-*~.nib
- 
-build/
- 
+# Xcode
+build/*
 *.pbxuser
-*.perspective
-*.perspectivev3
- 
+!default.pbxuser
 *.mode1v3
+!default.mode1v3
 *.mode2v3
- 
-Documentation/Generated
-doxygenWarnings.txt
-*.xcuserdatad
-*.xcuserdatad
-*.xccheckout
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
 
+# CocoaPods
+Pods/*
+
+# OS X
+.DS_Store
+
+# OCLint
+xcodebuild.log
+compile_commands.json

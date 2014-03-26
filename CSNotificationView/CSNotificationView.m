@@ -7,6 +7,7 @@
 //
 
 #import "CSNotificationView.h"
+#import "SHNCompat.h"
 
 static NSInteger const kCSNotificationViewEmptySymbolViewTag = 666;
 
@@ -15,8 +16,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
 @interface CSNotificationView ()
 
 #pragma mark - blur effect
-@property (nonatomic, strong) UIToolbar *toolbar;
-@property (nonatomic, strong) CALayer *blurLayer;
+
 
 #pragma mark - presentation
 @property (nonatomic, weak) UIViewController* parentViewController;
@@ -43,7 +43,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
     NSAssert(message, @"'message' must not be nil.");
     
     __block CSNotificationView* note = [[CSNotificationView alloc] initWithParentViewController:viewController];
-    note.tintColor = tintColor;
+    [note setShnTintColor:tintColor];
     note.image = image;
     note.textLabel.text = message;
     
@@ -81,7 +81,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
     NSParameterAssert(viewController);
     
     CSNotificationView* note = [[CSNotificationView alloc] initWithParentViewController:viewController];
-    note.tintColor = tintColor;
+    [note setShnTintColor: tintColor];
     note.image = image;
     note.textLabel.text = message;
     
@@ -95,21 +95,8 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
     self = [super initWithFrame:CGRectZero];
     if (self) {
         
-        //Blur | thanks to https://github.com/JagCesar/iOS-blur for providing this under the WTFPL-license!
         {
-            [self setToolbar:[[UIToolbar alloc] initWithFrame:[self bounds]]];
-            [self setBlurLayer:[[self toolbar] layer]];
-            
-            UIView *blurView = [UIView new];
-            [blurView setUserInteractionEnabled:NO];
-            [blurView.layer addSublayer:[self blurLayer]];
-            [blurView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            blurView.clipsToBounds = NO;
-            [self insertSubview:blurView atIndex:0];
-            
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[blurView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(blurView)]];
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(-1)-[blurView]-(-1)-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(blurView)]];
-            
+          
             [self setBackgroundColor:[UIColor clearColor]];
         }
         
@@ -139,8 +126,8 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
             {
                 _textLabel = [[UILabel alloc] init];
                 
-                UIFontDescriptor* textLabelFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-                _textLabel.font = [UIFont fontWithDescriptor:textLabelFontDescriptor size:17.0f];
+                //UIFontDescriptor* textLabelFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+                _textLabel.font = [UIFont systemFontOfSize:17.0f];
                 _textLabel.minimumScaleFactor = 0.6;
                 _textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
                 _textLabel.adjustsFontSizeToFitWidth = YES;
@@ -232,8 +219,6 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
-    //Update blur layer frame by updating the bounds frame
-    self.toolbar.frame = self.bounds;
 }
 
 #pragma mark - tint color
@@ -242,7 +227,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
 {
     _tintColor = tintColor;
     //Use 0.6 alpha value for translucency blur in UIToolbar
-    [self.toolbar setBarTintColor:[tintColor colorWithAlphaComponent:0.6]];
+    [super setTintColor:[[UIColor redColor] colorWithAlphaComponent:0.6]];
     self.contentColor = [self legibleTextColorForBlurTintColor:tintColor];
 }
 
@@ -302,7 +287,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
         weakself.showingActivity = NO;
         weakself.image = [CSNotificationView imageForStyle:style];
         weakself.textLabel.text = message;
-        weakself.tintColor = [CSNotificationView blurTintColorForStyle:style];
+        [weakself setShnTintColor:[CSNotificationView blurTintColorForStyle:style]];
         
     } completion:^(BOOL finished) {
         double delayInSeconds = 2.0;
@@ -442,7 +427,7 @@ static NSString* const kCSNotificationViewUINavigationControllerWillShowViewCont
 - (UIImage*)imageFromAlphaChannelOfImage:(UIImage*)image replacementColor:(UIColor*)tintColor
 {
     if (!image) return nil;
-    NSParameterAssert([tintColor isKindOfClass:[UIColor class]]);
+    //NSParameterAssert([tintColor isKindOfClass:[UIColor class]]);
  
     //Credits: https://gist.github.com/omz/1102091
     CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);

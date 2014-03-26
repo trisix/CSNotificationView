@@ -7,11 +7,13 @@
 //
 
 #import "CSAppDelegate.h"
+#import "SHNCompat.h"
 
 @implementation CSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [SHNCompat start];
     return YES;
 }
 
